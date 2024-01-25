@@ -15,6 +15,14 @@
       "available": "2023-01-03T00:00:00.000",
       "imageUrl": "http://placehold.it/200x100",
       "rating": 3
+    },
+    {
+      "id": "5",
+      "description": "Error test",
+      "price": 1,
+      "available": "2023-01-03T00:00:00.000",
+      "imageUrl": "http://placeholdasdfasdf.it/200x100",
+      "rating": 3
     }
   ]
 }

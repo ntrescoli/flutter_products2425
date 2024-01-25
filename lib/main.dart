@@ -93,7 +93,19 @@ class _ProductsState extends State<Products> {
                           leading: product.imageUrl.isNotEmpty
                               ? (Uri.parse(product.imageUrl).isAbsolute
                                   ? Image.network(product.imageUrl,
-                                      fit: BoxFit.cover, width: 50, height: 50)
+                                      loadingBuilder:
+                                          (context, child, progress) {
+                                        return progress == null
+                                            ? child
+                                            : const CircularProgressIndicator();
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              const Icon(Icons.image_outlined,
+                                                  size: 50),
+                                      fit: BoxFit.cover,
+                                      width: 50,
+                                      height: 50)
                                   : Image.file(File(product.imageUrl),
                                       fit: BoxFit.cover, width: 50, height: 50))
                               : const Icon(Icons.image_outlined, size: 50),
