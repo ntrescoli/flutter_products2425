@@ -1,16 +1,27 @@
-# flutter_products
+# Proyecto de ejemplo `flutter_products`
 
-A new Flutter project.
+## Descripción
 
-## Getting Started
+Módulo: Desarrollo de aplicaciones multiplataforma
+Curso: 2023/24
 
-This project is a starting point for a Flutter application.
+En estre proyecto se muestra un ejemplo de aplicación desarrollada con _Flutter_ partiendo de los contenidos vistos en la asignatura. ([contenidos en formato web](https://jsanvil.github.io/din2023/ud5/ud5_2_flutter_intro/)).
 
-A few resources to get you started if this is your first Flutter project:
+## Puesta en marcha
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Clonar el repositorio
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git clone https://github.com/jsanvil/flutter_products.git
+```
+
+Entrar en el directorio del proyecto y descargar las dependencias
+
+```bash
+cd flutter_products
+flutter pub get
+```
+
+## Notas
+
+- El repositorio se irá actualizando a medida que se vayan viendo nuevos contenidos en la asignatura, se corrijan fallos o se añada una mejora. Por lo que es posible que no funcione correctamente en un momento dado.
