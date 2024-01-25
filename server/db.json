@@ -1,0 +1,20 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "description": "WD BLACK SN770 2TB NVMe SSD",
+      "price": 115,
+      "available": "2023-10-03",
+      "imageUrl": "http://placehold.it/200x100",
+      "rating": 5
+    },
+    {
+      "id": "3",
+      "description": "Kingston FURY Beast DDR4 3200 MHz 16GB 2x8GB CL16",
+      "price": 54.95,
+      "available": "2023-01-03T00:00:00.000",
+      "imageUrl": "http://placehold.it/200x100",
+      "rating": 3
+    }
+  ]
+}
