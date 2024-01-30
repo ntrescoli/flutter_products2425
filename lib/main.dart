@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_products/models/product.dart';
 import 'package:flutter_products/pages/app_theme.dart';
 import 'package:flutter_products/pages/product_add.dart';
 import 'package:flutter_products/pages/product_detail.dart';
 import 'package:flutter_products/provider/products_service.dart';
+import 'package:flutter_products/widgets/product_list_item.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -78,8 +80,10 @@ class _ProductsState extends State<Products> {
                       itemCount: service.products.length,
                       itemBuilder: (context, index) {
                         final product = service.products[index];
-                        return ListTile(
-                          onTap: () => {
+                        // CUSTOM PRODUCT LIST ITEM WIDGET
+                        return ProductListItem(
+                          product: product,
+                          onTapCallback: () => {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -90,52 +94,6 @@ class _ProductsState extends State<Products> {
                                   service.updateProducts(),
                                 })
                           },
-                          leading: product.imageUrl.isNotEmpty
-                              ? (Uri.parse(product.imageUrl).isAbsolute
-                                  ? Image.network(product.imageUrl,
-                                      loadingBuilder:
-                                          (context, child, progress) {
-                                        return progress == null
-                                            ? child
-                                            : const CircularProgressIndicator();
-                                      },
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              const Icon(Icons.image_outlined,
-                                                  size: 50),
-                                      fit: BoxFit.cover,
-                                      width: 50,
-                                      height: 50)
-                                  : Image.file(File(product.imageUrl),
-                                      fit: BoxFit.cover, width: 50, height: 50))
-                              : const Icon(Icons.image_outlined, size: 50),
-                          title: Text(product.description),
-                          subtitle: Row(
-                            children: [
-                              Text(
-                                DateFormat('dd/MM/yyyy')
-                                    .format(product.available),
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(width: 20),
-                              Text(
-                                NumberFormat.simpleCurrency(locale: 'es')
-                                    .format(product.price),
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ],
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              for (var i = 0; i < product.rating; i++)
-                                const Icon(Icons.star,
-                                    color: Colors.amber, size: 16),
-                              for (var i = 0; i < 5 - product.rating; i++)
-                                const Icon(Icons.star,
-                                    color: Colors.grey, size: 16),
-                            ],
-                          ),
                         );
                       },
                     ),

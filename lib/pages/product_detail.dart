@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_products/pages/product_edit.dart';
 import 'package:flutter_products/provider/products_service.dart';
+import 'package:flutter_products/widgets/image_loader.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -103,14 +102,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      product.imageUrl.isNotEmpty
-                          ? (Uri.parse(product.imageUrl).isAbsolute
-                              ? Image.network(product.imageUrl,
-                                  fit: BoxFit.cover, width: 200, height: 200)
-                              : Image.file(File(product.imageUrl),
-                                  fit: BoxFit.cover, width: 200, height: 200))
-                          : const Icon(Icons.image_outlined,
-                              size: 200, color: Colors.grey),
+                      ImageLoader(product: product, size: 300),
                       const SizedBox(height: 20),
                       Text(
                         product.description,
