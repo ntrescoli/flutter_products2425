@@ -1,8 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_products/main.dart';
 import 'package:flutter_products/models/product.dart';
+import 'package:flutter_products/provider/selected_product_notifier.dart';
 import 'package:flutter_products/widgets/image_loader.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 /// Product List Item Widget
 ///
@@ -13,43 +15,67 @@ import 'package:intl/intl.dart';
 ///
 /// The widget displays the product image, description, available date,
 /// price and rating.
-class ProductListItem extends StatelessWidget {
+class ProductListItem extends StatefulWidget {
   const ProductListItem({
     super.key,
     required this.product,
+    // required this.selectedNotifier,
     required this.onTapCallback,
   });
 
   final Product product;
-  final Function onTapCallback;
+  // final SelectedProductNotifier selectedNotifier;
+  final Function(Product) onTapCallback;
 
   @override
+  State<ProductListItem> createState() => _ProductListItemState();
+}
+
+class _ProductListItemState extends State<ProductListItem> {
+  @override
   Widget build(BuildContext context) {
+    bool selected = context.watch<SelectedProductNotifier>().selectedProduct ==
+        widget.product;
+
     return ListTile(
       onTap: () => {
-        onTapCallback(),
+        widget.onTapCallback(widget.product),
       },
-      leading: ImageLoader(product: product, size: 50),
-      title: Text(product.description),
+      selected: selected,
+      leading: ImageLoader(product: widget.product, size: 50),
+      title: Text(widget.product.description,
+          style: const TextStyle(
+              overflow: TextOverflow.ellipsis, fontWeight: FontWeight.w500)),
+      focusColor: Colors.grey[300],
+      selectedTileColor: Colors.blue[100],
       subtitle: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(
-            DateFormat('dd/MM/yyyy').format(product.available),
-            style: const TextStyle(fontSize: 16),
-          ),
-          const SizedBox(width: 20),
-          Text(
-            NumberFormat.simpleCurrency(locale: 'es').format(product.price),
-            style: const TextStyle(fontSize: 16),
+          Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Colors.green[100],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              NumberFormat.simpleCurrency(locale: 'es')
+                  .format(widget.product.price),
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (var i = 0; i < product.rating; i++)
+          for (var i = 0; i < widget.product.rating; i++)
             const Icon(Icons.star, color: Colors.amber, size: 16),
-          for (var i = 0; i < 5 - product.rating; i++)
+          for (var i = 0; i < 5 - widget.product.rating; i++)
             const Icon(Icons.star, color: Colors.grey, size: 16),
         ],
       ),

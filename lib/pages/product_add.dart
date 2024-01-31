@@ -40,6 +40,7 @@ class _ProductAddState extends State<ProductAdd> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           'Nuevo Producto',
         ),

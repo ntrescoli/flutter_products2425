@@ -55,6 +55,7 @@ class _ProductEditState extends State<ProductEdit> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           product.description,
         ),
@@ -166,18 +167,22 @@ class _ProductEditState extends State<ProductEdit> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Producto modificado')),
                       );
-                      productsNotifier.modifyProduct(Product(
-                          id: product.id,
-                          description: _descriptionController.text,
-                          price: double.tryParse(_priceController.text)!,
-                          available: _availableController.text.isNotEmpty
-                              ? DateTime.parse(_availableController.text)
-                              : DateTime.now(),
-                          imageUrl: _imageUrlController.text,
-                          rating: _ratingController.text.isNotEmpty
-                              ? int.parse(_ratingController.text)
-                              : 0));
-                      Navigator.pop(context);
+                      productsNotifier
+                          .modifyProduct(Product(
+                              id: product.id,
+                              description: _descriptionController.text,
+                              price: double.tryParse(_priceController.text)!,
+                              available: _availableController.text.isNotEmpty
+                                  ? DateTime.parse(_availableController.text)
+                                  : DateTime.now(),
+                              imageUrl: _imageUrlController.text,
+                              rating: _ratingController.text.isNotEmpty
+                                  ? int.parse(_ratingController.text)
+                                  : 0))
+                          .then((value) => {
+                                debugPrint('Product modified ${value!.id}'),
+                                Navigator.pop(context, value)
+                              });
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Revise los datos')),
@@ -200,7 +205,7 @@ class _ProductEditState extends State<ProductEdit> {
       image = await ImagePicker().pickImage(source: ImageSource.gallery);
       return image;
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      debugPrint('Failed to pick image: $e');
     }
   }
 }

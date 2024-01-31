@@ -17,7 +17,7 @@ class ProductsService extends ChangeNotifier {
   static const String path = '/products';
 
   ProductsService() {
-    updateProducts();
+    // updateProducts();
   }
 
   updateProducts() {
@@ -27,6 +27,12 @@ class ProductsService extends ChangeNotifier {
     });
   }
 
+  /// Obtiene el listado de productos
+  ///
+  /// ej.: `GET` -> http://localhost:3000/products
+  ///
+  /// Devuelve un listado de productos `List<Product>`
+  ///
   Future<List<Product>> getProducts() async {
     setError('');
     try {
@@ -55,6 +61,15 @@ class ProductsService extends ChangeNotifier {
     }
   }
 
+  /// Crea un nuevo producto
+  ///
+  /// ej.:
+  ///   - `POST` -> http://localhost:3000/products
+  ///   - `HEADERS` -> `Content-Type: application/json`
+  ///   - `BODY` -> `{"name":"prod name", "description":"prod desc", "price":10.0, "imageUrl":""}`
+  ///   - !! NO enviar `id` en el cuerpo del mensaje
+  ///
+  /// Devuelve el producto creado `Product`
   Future<Product?> addProduct(Product product) async {
     setError('');
     try {
@@ -77,6 +92,11 @@ class ProductsService extends ChangeNotifier {
     }
   }
 
+  /// Borra un producto
+  ///
+  /// ej.: `DELETE` -> http://localhost:3000/products/1
+  ///
+  /// Devuelve el producto borrado `Product`
   Future<Product?> removeProduct(String id) async {
     setError('');
     try {
@@ -97,6 +117,11 @@ class ProductsService extends ChangeNotifier {
     }
   }
 
+  /// Obtiene un producto por su id
+  ///
+  /// ej.: `GET` -> http://localhost:3000/products/1
+  ///
+  /// Devuelve el producto `Product`
   Future<Product?> getProduct(String id) async {
     setError('');
     try {
@@ -141,6 +166,5 @@ class ProductsService extends ChangeNotifier {
 
   void setError(String error) {
     lastError = error;
-    notifyListeners();
   }
 }
