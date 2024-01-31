@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_products/main.dart';
 import 'package:flutter_products/models/product.dart';
 import 'package:flutter_products/provider/selected_product_notifier.dart';
 import 'package:flutter_products/widgets/image_loader.dart';

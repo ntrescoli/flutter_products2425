@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_products/models/product.dart';
 import 'package:flutter_products/provider/products_service.dart';
+import 'package:flutter_products/provider/selected_product_notifier.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProductEdit extends StatefulWidget {
   final Product product;
@@ -180,7 +182,9 @@ class _ProductEditState extends State<ProductEdit> {
                                   ? int.parse(_ratingController.text)
                                   : 0))
                           .then((value) => {
-                                debugPrint('Product modified ${value!.id}'),
+                                context
+                                    .read<SelectedProductNotifier>()
+                                    .selectedProduct = value!,
                                 Navigator.pop(context, value)
                               });
                     } else {

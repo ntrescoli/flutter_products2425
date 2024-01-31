@@ -61,9 +61,17 @@ class _TwoPaneLayoutState extends State<TwoPaneLayout> {
   @override
   Widget build(BuildContext context) {
     Product? product = context.watch<SelectedProductNotifier>().selectedProduct;
+    bool loading = context.watch<ProductsService>().loading;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DIN23 - Flutter Products'),
+        title: Row(
+          children: [
+            const Text('DIN23 - Flutter Products'),
+            const SizedBox(width: 10),
+            if (loading) const CircularProgressIndicator(),
+          ],
+        ),
       ),
       body: Row(
         children: [
@@ -126,16 +134,14 @@ class SingleColumnLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProductsList(
       onTapCallback: (product) => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductDetail(
-                    product: product,
-                    closeCallback: () {
-                      Navigator.pop(context);
-                    },
-                  )),
-        )
+        context.read<SelectedProductNotifier>().selectedProduct = product,
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ProductDetail(
+              product: product,
+              closeCallback: () {
+                Navigator.pop(context);
+              });
+        })).then((value) => {context.read<ProductsService>().updateProducts()})
       },
     );
   }

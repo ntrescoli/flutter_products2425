@@ -9,6 +9,9 @@ class ProductsService extends ChangeNotifier {
   static const int timeout = 3;
   List<Product> products = [];
   String lastError = '';
+  bool _loading = false;
+
+  bool get loading => _loading;
 
   static final HttpClient client = HttpClient();
 
@@ -35,6 +38,7 @@ class ProductsService extends ChangeNotifier {
   ///
   Future<List<Product>> getProducts() async {
     setError('');
+    _loading = true;
     try {
       HttpClientRequest request = await client
           .get(host, port, path)
@@ -49,14 +53,17 @@ class ProductsService extends ChangeNotifier {
           products.add(product);
         }
         this.products = products;
+        _loading = false;
         notifyListeners();
         return products;
       } else {
         setError('Error al obtener listado de productos. $response.statusCode');
+        _loading = false;
         return [];
       }
     } catch (e) {
       setError('Error al obtener listado de productos. $e');
+      _loading = false;
       return products;
     }
   }
@@ -71,6 +78,7 @@ class ProductsService extends ChangeNotifier {
   ///
   /// Devuelve el producto creado `Product`
   Future<Product?> addProduct(Product product) async {
+    _loading = true;
     setError('');
     try {
       HttpClientRequest request = await client
@@ -81,13 +89,16 @@ class ProductsService extends ChangeNotifier {
       HttpClientResponse response = await request.close();
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final String jsonString = await response.transform(utf8.decoder).join();
+        _loading = false;
         return Product.fromJson(jsonDecode(jsonString));
       } else {
         setError('Error al crear producto. $response.statusCode');
+        _loading = false;
         return null;
       }
     } catch (e) {
       setError('Error al crear producto. $e');
+      _loading = false;
       return null;
     }
   }
@@ -98,6 +109,7 @@ class ProductsService extends ChangeNotifier {
   ///
   /// Devuelve el producto borrado `Product`
   Future<Product?> removeProduct(String id) async {
+    _loading = true;
     setError('');
     try {
       HttpClientRequest request = await client
@@ -106,13 +118,16 @@ class ProductsService extends ChangeNotifier {
       HttpClientResponse response = await request.close();
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final String jsonString = await response.transform(utf8.decoder).join();
+        _loading = false;
         return Product.fromJson(jsonDecode(jsonString));
       } else {
         setError('Error al borrar producto. ${response.statusCode}');
+        _loading = false;
         return null;
       }
     } catch (e) {
       setError('Error al borrar producto. $e');
+      _loading = false;
       return null;
     }
   }
@@ -123,6 +138,7 @@ class ProductsService extends ChangeNotifier {
   ///
   /// Devuelve el producto `Product`
   Future<Product?> getProduct(String id) async {
+    _loading = true;
     setError('');
     try {
       HttpClientRequest request = await client
@@ -131,18 +147,22 @@ class ProductsService extends ChangeNotifier {
       HttpClientResponse response = await request.close();
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final String jsonString = await response.transform(utf8.decoder).join();
+        _loading = false;
         return Product.fromJson(jsonDecode(jsonString));
       } else {
         setError('Error al obtener producto. ${response.statusCode}');
+        _loading = false;
         return null;
       }
     } catch (e) {
       setError('Error al obtener producto. $e');
+      _loading = false;
       return null;
     }
   }
 
   Future<Product?> modifyProduct(Product product) async {
+    _loading = true;
     setError('');
     try {
       HttpClientRequest request = await client
@@ -153,13 +173,16 @@ class ProductsService extends ChangeNotifier {
       HttpClientResponse response = await request.close();
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final String jsonString = await response.transform(utf8.decoder).join();
+        _loading = false;
         return Product.fromJson(jsonDecode(jsonString));
       } else {
         setError('Error al modificar producto. ${response.statusCode}');
+        _loading = false;
         return null;
       }
     } catch (e) {
       setError('Error al modificar producto. $e');
+      _loading = false;
       return null;
     }
   }

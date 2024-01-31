@@ -24,11 +24,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.product != null) {
-      product = widget.product;
-    } else {
-      product = context.watch<SelectedProductNotifier>().selectedProduct;
-    }
+    product = context.watch<SelectedProductNotifier>().selectedProduct;
 
     return ChangeNotifierProvider.value(
       value: context.read<SelectedProductNotifier>(),
@@ -60,12 +56,15 @@ class _ProductDetailState extends State<ProductDetail> {
                             builder: (context) =>
                                 ProductEdit(product: product!)),
                       ).then((value) => {
-                            if (value != null && value.id != null)
-                              debugPrint(
-                                  'ProductEdit returned: ${value.description}'),
-                            setState(() {
-                              product = value;
-                            })
+                            context
+                                .read<SelectedProductNotifier>()
+                                .selectedProduct = value,
+                            // if (value != null && value.id != null)
+                            //   {
+                            //     setState(() {
+                            //       product = value;
+                            //     })
+                            //   }
                           });
                     }),
                 // DELETE

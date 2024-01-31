@@ -15,20 +15,24 @@ class ProductsList extends StatefulWidget {
 }
 
 class _ProductsListState extends State<ProductsList> {
-  late Future<List<Product>> products;
+  // late Future<List<Product>> products;
 
-  @override
-  void initState() {
-    super.initState();
-    products = getProducts();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   products = getProducts();
+  // }
 
-  Future<List<Product>> getProducts() async {
-    return await context.read<ProductsService>().getProducts();
-  }
+  // Future<List<Product>> getProducts() async {
+  //   return await context.read<ProductsService>().getProducts();
+  // }
+
+  List<Product> products = [];
 
   @override
   Widget build(BuildContext context) {
+    products = context.watch<ProductsService>().products;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Productos'),
@@ -38,9 +42,7 @@ class _ProductsListState extends State<ProductsList> {
                 icon: const Icon(Icons.refresh),
                 tooltip: 'Actualizar',
                 onPressed: () {
-                  setState(() {
-                    products = getProducts();
-                  });
+                  context.read<ProductsService>().updateProducts();
                 }),
             IconButton(
                 icon: const Icon(Icons.search),
@@ -77,18 +79,28 @@ class _ProductsListState extends State<ProductsList> {
                 : const SizedBox.shrink(),
           ),
           Expanded(
-            child: FutureBuilder<List<Product>>(
-                future: products,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasData) {
-                    return buildProductsList(snapshot.data!);
-                  } else {
-                    return const Center(child: Text('No hay productos'));
-                  }
-                }),
-          ),
+            child: ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return ProductListItem(
+                  product: products[index],
+                  onTapCallback: (product) => widget.onTapCallback(product),
+                );
+              },
+            ),
+          )
+          // child: FutureBuilder<List<Product>>(
+          //     future: products,
+          //     builder: (context, snapshot) {
+          //       if (snapshot.connectionState == ConnectionState.waiting) {
+          //         return const Center(child: CircularProgressIndicator());
+          //       } else if (snapshot.hasData) {
+          //         return buildProductsList(snapshot.data!);
+          //       } else {
+          //         return const Center(child: Text('No hay productos'));
+          //       }
+          //     }),
+          // ),
         ]));
   }
 
@@ -98,7 +110,6 @@ class _ProductsListState extends State<ProductsList> {
       itemBuilder: (context, index) {
         return ProductListItem(
           product: products[index],
-          // selectedNotifier: widget.selectedProductNotifier,
           onTapCallback: (product) => widget.onTapCallback(product),
         );
       },
