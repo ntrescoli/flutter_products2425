@@ -7,13 +7,11 @@ class SelectedProductNotifier extends ChangeNotifier {
   Product? get selectedProduct => _selectedProduct;
 
   set selectedProduct(Product? product) {
-    debugPrint('selectedProduct = ${product!.description}');
     _selectedProduct = product;
     notifyListeners();
   }
 
   void clear() {
-    debugPrint('clear');
     _selectedProduct = null;
     notifyListeners();
   }

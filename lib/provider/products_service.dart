@@ -20,7 +20,7 @@ class ProductsService extends ChangeNotifier {
   static const String path = '/products';
 
   ProductsService() {
-    // updateProducts();
+    updateProducts();
   }
 
   updateProducts() {
@@ -39,6 +39,8 @@ class ProductsService extends ChangeNotifier {
   Future<List<Product>> getProducts() async {
     setError('');
     _loading = true;
+    notifyListeners();
+
     try {
       HttpClientRequest request = await client
           .get(host, port, path)

@@ -18,12 +18,10 @@ class ProductListItem extends StatefulWidget {
   const ProductListItem({
     super.key,
     required this.product,
-    // required this.selectedNotifier,
     required this.onTapCallback,
   });
 
   final Product product;
-  // final SelectedProductNotifier selectedNotifier;
   final Function(Product) onTapCallback;
 
   @override

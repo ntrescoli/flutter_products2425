@@ -36,7 +36,7 @@ class MainLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 600) {
+      if (constraints.maxWidth > 700) {
         return const TwoPaneLayout();
       } else {
         return const SingleColumnLayout();
@@ -123,7 +123,7 @@ class _HorizontalTransitionState extends State<HorizontalTransition>
     return AnimatedSize(
         duration: const Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn,
-        child: SizedBox(width: _visible ? 600 : 0, child: widget.child));
+        child: SizedBox(width: _visible ? 500 : 0, child: widget.child));
   }
 }
 
@@ -132,17 +132,20 @@ class SingleColumnLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProductsList(
-      onTapCallback: (product) => {
-        context.read<SelectedProductNotifier>().selectedProduct = product,
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ProductDetail(
-              product: product,
-              closeCallback: () {
-                Navigator.pop(context);
-              });
-        })).then((value) => {context.read<ProductsService>().updateProducts()})
-      },
+    return SizedBox.expand(
+      child: ProductsList(
+        onTapCallback: (product) => {
+          context.read<SelectedProductNotifier>().selectedProduct = product,
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ProductDetail(
+                product: product,
+                closeCallback: () {
+                  Navigator.pop(context);
+                });
+          })).then(
+              (value) => {context.read<ProductsService>().updateProducts()})
+        },
+      ),
     );
   }
 }

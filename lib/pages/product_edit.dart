@@ -185,6 +185,9 @@ class _ProductEditState extends State<ProductEdit> {
                                 context
                                     .read<SelectedProductNotifier>()
                                     .selectedProduct = value!,
+                                context
+                                    .read<ProductsService>()
+                                    .updateProducts(),
                                 Navigator.pop(context, value)
                               });
                     } else {

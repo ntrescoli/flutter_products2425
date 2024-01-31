@@ -59,12 +59,6 @@ class _ProductDetailState extends State<ProductDetail> {
                             context
                                 .read<SelectedProductNotifier>()
                                 .selectedProduct = value,
-                            // if (value != null && value.id != null)
-                            //   {
-                            //     setState(() {
-                            //       product = value;
-                            //     })
-                            //   }
                           });
                     }),
                 // DELETE
@@ -145,6 +139,7 @@ class _ProductDetailState extends State<ProductDetail> {
               child: const Text('Eliminar'),
               onPressed: () {
                 service.removeProduct(product.id!).then((value) => {
+                      service.updateProducts(),
                       Navigator.of(context).pop(),
                       deleteCallback(),
                     });

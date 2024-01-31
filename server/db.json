@@ -3,7 +3,7 @@
     {
       "id": "1",
       "description": "WD BLACK SN770 2TB NVMe SSD",
-      "price": 120.09,
+      "price": 120.05,
       "available": "2023-10-03T00:00:00.000",
       "imageUrl": "http://placehold.it/200x100",
       "rating": 4
@@ -25,12 +25,12 @@
       "rating": 3
     },
     {
-      "id": "hQEDS7k",
       "description": "test3",
       "price": 3,
       "available": "2024-01-31T00:00:00.000",
       "imageUrl": "",
-      "rating": 0
+      "rating": 0,
+      "id": "DTX4MsE"
     }
   ]
 }
