@@ -196,7 +196,7 @@ class _ProductAddState extends State<ProductAdd> {
       image = await ImagePicker().pickImage(source: ImageSource.gallery);
       return image;
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      debugPrint('Failed to pick image: $e');
     }
   }
 }

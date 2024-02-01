@@ -82,6 +82,8 @@ class ProductsService extends ChangeNotifier {
   Future<Product?> addProduct(Product product) async {
     _loading = true;
     setError('');
+    notifyListeners();
+
     try {
       HttpClientRequest request = await client
           .post(host, port, path)
@@ -142,6 +144,8 @@ class ProductsService extends ChangeNotifier {
   Future<Product?> getProduct(String id) async {
     _loading = true;
     setError('');
+    notifyListeners();
+
     try {
       HttpClientRequest request = await client
           .get(host, port, '$path/$id')
@@ -166,6 +170,8 @@ class ProductsService extends ChangeNotifier {
   Future<Product?> modifyProduct(Product product) async {
     _loading = true;
     setError('');
+    notifyListeners();
+
     try {
       HttpClientRequest request = await client
           .put(host, port, '$path/${product.id}')
