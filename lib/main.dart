@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_products/widgets/width_anim_size_container.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_products/provider/products_service.dart';
@@ -89,41 +90,21 @@ class _TwoPaneLayoutState extends State<TwoPaneLayout> {
             thickness: 1,
             color: Colors.blueGrey,
           ),
-          HorizontalTransition(
-              child: ProductDetail(
-                  product: product,
-                  closeCallback: () {
-                    context.read<SelectedProductNotifier>().clear();
-                  }))
+          Builder(builder: (context) {
+            // bool visible = context.watch<SelectedProductNotifier>().hasProduct;
+            ValueNotifier<bool> expandedNotifier = ValueNotifier(
+                context.watch<SelectedProductNotifier>().hasProduct);
+            return WidthAnimSizeContainer(
+                expanded: expandedNotifier,
+                child: ProductDetail(
+                    product: product,
+                    closeCallback: () {
+                      context.read<SelectedProductNotifier>().clear();
+                    }));
+          }),
         ],
       ),
     );
-  }
-}
-
-class HorizontalTransition extends StatefulWidget {
-  const HorizontalTransition({
-    super.key,
-    required this.child,
-  });
-
-  final Widget child;
-
-  @override
-  State<HorizontalTransition> createState() => _HorizontalTransitionState();
-}
-
-class _HorizontalTransitionState extends State<HorizontalTransition>
-    with TickerProviderStateMixin {
-  bool _visible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    _visible = context.watch<SelectedProductNotifier>().hasProduct;
-    return AnimatedSize(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.fastOutSlowIn,
-        child: SizedBox(width: _visible ? 500 : 0, child: widget.child));
   }
 }
 
