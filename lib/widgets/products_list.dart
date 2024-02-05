@@ -16,8 +16,14 @@ class ProductsList extends StatefulWidget {
 
 class _ProductsListState extends State<ProductsList> {
   bool showSearch = false;
+  bool showFilters = false;
+
   late TextEditingController searchBarController;
   late FocusNode searchFocusNode;
+
+  bool? sortNameAsc;
+  bool? sortPriceAsc;
+  bool? sortRatingAsc;
 
   @override
   void initState() {
@@ -35,6 +41,10 @@ class _ProductsListState extends State<ProductsList> {
 
   @override
   Widget build(BuildContext context) {
+    sortNameAsc = context.watch<ProductsService>().sortNameAsc;
+    sortPriceAsc = context.watch<ProductsService>().sortPriceAsc;
+    sortRatingAsc = context.watch<ProductsService>().sortRatingAsc;
+
     return ChangeNotifierProvider.value(
         value: context.read<ProductsService>(),
         child: Consumer<ProductsService>(
@@ -67,7 +77,11 @@ class _ProductsListState extends State<ProductsList> {
                     IconButton(
                         icon: const Icon(Icons.sort),
                         tooltip: 'Ordenar Productos',
-                        onPressed: () {}),
+                        onPressed: () {
+                          setState(() {
+                            showFilters = !showFilters;
+                          });
+                        }),
                     IconButton(
                         icon: const Icon(Icons.add_outlined),
                         tooltip: 'Nuevo Producto',
@@ -97,50 +111,192 @@ class _ProductsListState extends State<ProductsList> {
                                 )
                               : const SizedBox.shrink(),
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          child: !showSearch
-                              ? const SizedBox.shrink()
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                      // SEARCH BAR
-                                      child: SearchBar(
-                                          controller: searchBarController,
-                                          focusNode: searchFocusNode,
-                                          padding:
-                                              const MaterialStatePropertyAll<
-                                                      EdgeInsets>(
-                                                  EdgeInsets.symmetric(
-                                                      horizontal: 10.0)),
-                                          onChanged: (value) => {
-                                                service.filterProducts(value),
-                                                debugPrint(
-                                                    'SearchBar onChanged: $value'),
-                                              },
-                                          onSubmitted: (value) => {
-                                                service.filterProducts(value),
-                                                debugPrint(
-                                                    'SearchBar onSubmitted: $value'),
-                                              },
-                                          leading: Container(
-                                            padding: const EdgeInsets.all(10),
-                                            child: const Icon(Icons.search),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // SEARCH BAR
+                            !showSearch
+                                ? const SizedBox.shrink()
+                                : Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: SearchBar(
+                                                controller: searchBarController,
+                                                focusNode: searchFocusNode,
+                                                padding:
+                                                    const MaterialStatePropertyAll<
+                                                            EdgeInsets>(
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10.0)),
+                                                onChanged: (value) => {
+                                                      service.filterProducts(
+                                                          value),
+                                                    },
+                                                onSubmitted: (value) => {
+                                                      service.filterProducts(
+                                                          value),
+                                                    },
+                                                leading: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child:
+                                                      const Icon(Icons.search),
+                                                ),
+                                                trailing: [
+                                                  IconButton(
+                                                    icon:
+                                                        const Icon(Icons.close),
+                                                    tooltip: 'Limpiar',
+                                                    onPressed: () {
+                                                      searchBarController
+                                                          .clear();
+                                                      service
+                                                          .filterProducts('');
+                                                    },
+                                                  ),
+                                                ]),
                                           ),
-                                          trailing: [
-                                            IconButton(
-                                              icon: const Icon(Icons.close),
-                                              tooltip: 'Limpiar',
-                                              onPressed: () {
-                                                searchBarController.clear();
-                                                service.filterProducts('');
-                                              },
-                                            ),
-                                          ]),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                            // filters
+                            !showFilters
+                                ? const SizedBox.shrink()
+                                : Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          ActionChip(
+                                            avatar: Icon((sortNameAsc != null)
+                                                ? (sortNameAsc!
+                                                    ? Icons.arrow_downward
+                                                    : Icons.arrow_upward)
+                                                : Icons.sort),
+                                            label: const Text('Nombre'),
+                                            onPressed: () =>
+                                                {service.sortName()},
+                                          ),
+                                          const SizedBox(width: 10),
+                                          ActionChip(
+                                            avatar: Icon((sortPriceAsc != null)
+                                                ? (sortPriceAsc!
+                                                    ? Icons.arrow_downward
+                                                    : Icons.arrow_upward)
+                                                : Icons.sort),
+                                            label: const Text('Precio'),
+                                            onPressed: () =>
+                                                {service.sortPrice()},
+                                          ),
+                                          const SizedBox(width: 10),
+                                          ActionChip(
+                                            avatar: Icon((sortRatingAsc != null)
+                                                ? (sortRatingAsc!
+                                                    ? Icons.arrow_downward
+                                                    : Icons.arrow_upward)
+                                                : Icons.sort),
+                                            label: const Text('Rating'),
+                                            onPressed: () =>
+                                                {service.sortRating()},
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                          ],
                         ),
+                        // // SEARCH BAR
+                        // !showSearch
+                        //     ? const SizedBox.shrink()
+                        //     : Container(
+                        //         padding: const EdgeInsets.all(10),
+                        //         child: Row(
+                        //           children: [
+                        //             Expanded(
+                        //               child: SearchBar(
+                        //                   controller: searchBarController,
+                        //                   focusNode: searchFocusNode,
+                        //                   padding:
+                        //                       const MaterialStatePropertyAll<
+                        //                               EdgeInsets>(
+                        //                           EdgeInsets.symmetric(
+                        //                               horizontal: 10.0)),
+                        //                   onChanged: (value) => {
+                        //                         service.filterProducts(value),
+                        //                         debugPrint(
+                        //                             'SearchBar onChanged: $value'),
+                        //                       },
+                        //                   onSubmitted: (value) => {
+                        //                         service.filterProducts(value),
+                        //                         debugPrint(
+                        //                             'SearchBar onSubmitted: $value'),
+                        //                       },
+                        //                   leading: Container(
+                        //                     padding: const EdgeInsets.all(10),
+                        //                     child: const Icon(Icons.search),
+                        //                   ),
+                        //                   trailing: [
+                        //                     IconButton(
+                        //                       icon: const Icon(Icons.close),
+                        //                       tooltip: 'Limpiar',
+                        //                       onPressed: () {
+                        //                         searchBarController.clear();
+                        //                         service.filterProducts('');
+                        //                       },
+                        //                     ),
+                        //                   ]),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        // // filters
+                        // !showFilters
+                        //     ? const SizedBox.shrink()
+                        //     : Container(
+                        //         padding: const EdgeInsets.all(10),
+                        //         child: Row(
+                        //           children: [
+                        //             Expanded(
+                        //               child: SearchBar(
+                        //                   controller: searchBarController,
+                        //                   focusNode: searchFocusNode,
+                        //                   padding:
+                        //                       const MaterialStatePropertyAll<
+                        //                               EdgeInsets>(
+                        //                           EdgeInsets.symmetric(
+                        //                               horizontal: 10.0)),
+                        //                   onChanged: (value) => {
+                        //                         service.filterProducts(value),
+                        //                         debugPrint(
+                        //                             'SearchBar onChanged: $value'),
+                        //                       },
+                        //                   onSubmitted: (value) => {
+                        //                         service.filterProducts(value),
+                        //                         debugPrint(
+                        //                             'SearchBar onSubmitted: $value'),
+                        //                       },
+                        //                   leading: Container(
+                        //                     padding: const EdgeInsets.all(10),
+                        //                     child: const Icon(Icons.search),
+                        //                   ),
+                        //                   trailing: [
+                        //                     IconButton(
+                        //                       icon: const Icon(Icons.close),
+                        //                       tooltip: 'Limpiar',
+                        //                       onPressed: () {
+                        //                         searchBarController.clear();
+                        //                         service.filterProducts('');
+                        //                       },
+                        //                     ),
+                        //                   ]),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
                         Expanded(
                           child: ListView.builder(
                             itemCount: service.filteredProducts.length,

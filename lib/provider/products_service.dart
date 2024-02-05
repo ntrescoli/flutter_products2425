@@ -12,6 +12,11 @@ class ProductsService extends ChangeNotifier {
   String lastError = '';
   bool _loading = false;
 
+  String searchFilter = '';
+  bool? sortNameAsc;
+  bool? sortPriceAsc;
+  bool? sortRatingAsc;
+
   bool get loading => _loading;
 
   static final HttpClient client = HttpClient();
@@ -28,7 +33,7 @@ class ProductsService extends ChangeNotifier {
     getProducts().then((value) {
       products = value;
       filteredProducts = value;
-      notifyListeners();
+      applyFilters();
     });
   }
 
@@ -202,10 +207,66 @@ class ProductsService extends ChangeNotifier {
   }
 
   filterProducts(String value) {
+    searchFilter = value;
+    applyFilters();
+  }
+
+  sortName() {
+    sortNameAsc = sortNameAsc == null ? true : !sortNameAsc!;
+    resetSortPrice();
+    resetSortRating();
+    applyFilters();
+  }
+
+  sortPrice() {
+    sortPriceAsc = sortPriceAsc == null ? true : !sortPriceAsc!;
+    resetSortName();
+    resetSortRating();
+    applyFilters();
+  }
+
+  sortRating() {
+    sortRatingAsc = sortRatingAsc == null ? true : !sortRatingAsc!;
+    resetSortName();
+    resetSortPrice();
+    applyFilters();
+  }
+
+  resetSortName() {
+    sortNameAsc = null;
+  }
+
+  resetSortPrice() {
+    sortPriceAsc = null;
+  }
+
+  resetSortRating() {
+    sortRatingAsc = null;
+  }
+
+  applyFilters() {
     filteredProducts = products
-        .where((element) =>
-            element.description.toLowerCase().contains(value.toLowerCase()))
+        .where((element) => element.description
+            .toLowerCase()
+            .contains(searchFilter.toLowerCase()))
         .toList();
+    if (sortNameAsc != null) {
+      sortNameAsc!
+          ? filteredProducts.sort(
+              (a, b) => a.description.toLowerCase().compareTo(b.description))
+          : filteredProducts.sort(
+              (a, b) => b.description.toLowerCase().compareTo(a.description));
+    }
+    if (sortPriceAsc != null) {
+      sortPriceAsc!
+          ? filteredProducts.sort((a, b) => a.price.compareTo(b.price))
+          : filteredProducts.sort((a, b) => b.price.compareTo(a.price));
+    }
+    if (sortRatingAsc != null) {
+      sortRatingAsc!
+          ? filteredProducts.sort((a, b) => a.rating.compareTo(b.rating))
+          : filteredProducts.sort((a, b) => b.rating.compareTo(a.rating));
+    }
     notifyListeners();
   }
 }
