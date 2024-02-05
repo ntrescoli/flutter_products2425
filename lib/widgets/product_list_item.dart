@@ -38,6 +38,7 @@ class _ProductListItemState extends State<ProductListItem> {
       onTap: () => {
         widget.onTapCallback(widget.product),
       },
+      style: ListTileStyle.drawer,
       selected: selected,
       leading: ImageLoader(product: widget.product, size: 50),
       title: Text(widget.product.description,
@@ -45,6 +46,7 @@ class _ProductListItemState extends State<ProductListItem> {
               overflow: TextOverflow.ellipsis, fontWeight: FontWeight.w500)),
       focusColor: Colors.grey[300],
       selectedTileColor: Colors.blue[100],
+      hoverColor: Colors.grey[300],
       subtitle: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -69,6 +71,7 @@ class _ProductListItemState extends State<ProductListItem> {
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
+        verticalDirection: VerticalDirection.down,
         children: [
           for (var i = 0; i < widget.product.rating; i++)
             const Icon(Icons.star, color: Colors.amber, size: 16),

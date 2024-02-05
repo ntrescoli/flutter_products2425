@@ -15,6 +15,24 @@ class ProductsList extends StatefulWidget {
 }
 
 class _ProductsListState extends State<ProductsList> {
+  bool showSearch = false;
+  late TextEditingController searchBarController;
+  late FocusNode searchFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    searchBarController = TextEditingController();
+    searchFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    searchBarController.dispose();
+    searchFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -35,7 +53,17 @@ class _ProductsListState extends State<ProductsList> {
                     IconButton(
                         icon: const Icon(Icons.search),
                         tooltip: 'Buscar Producto',
-                        onPressed: () {}),
+                        onPressed: () {
+                          setState(() {
+                            showSearch = !showSearch;
+                          });
+                          if (!showSearch) {
+                            searchBarController.clear();
+                            service.filterProducts('');
+                          } else {
+                            searchFocusNode.requestFocus();
+                          }
+                        }),
                     IconButton(
                         icon: const Icon(Icons.sort),
                         tooltip: 'Ordenar Productos',
@@ -52,33 +80,83 @@ class _ProductsListState extends State<ProductsList> {
                         })
                   ],
                 ),
-                body: Column(children: [
-                  Container(
-                    width: double.infinity,
-                    padding: service.lastError.isNotEmpty
-                        ? const EdgeInsets.all(10)
-                        : EdgeInsets.zero,
-                    color: Colors.red[100],
-                    child: service.lastError.isNotEmpty
-                        ? Text(
-                            service.lastError,
-                            style: const TextStyle(color: Colors.black),
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: service.products.length,
-                      itemBuilder: (context, index) {
-                        return ProductListItem(
-                          product: service.products[index],
-                          onTapCallback: (product) =>
-                              widget.onTapCallback(product),
-                        );
-                      },
+                body: Row(
+                  children: [
+                    Expanded(
+                      child: Column(children: [
+                        Container(
+                          width: double.infinity,
+                          padding: service.lastError.isNotEmpty
+                              ? const EdgeInsets.all(10)
+                              : EdgeInsets.zero,
+                          color: Colors.red[100],
+                          child: service.lastError.isNotEmpty
+                              ? Text(
+                                  service.lastError,
+                                  style: const TextStyle(color: Colors.black),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          child: !showSearch
+                              ? const SizedBox.shrink()
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                      // SEARCH BAR
+                                      child: SearchBar(
+                                          controller: searchBarController,
+                                          focusNode: searchFocusNode,
+                                          padding:
+                                              const MaterialStatePropertyAll<
+                                                      EdgeInsets>(
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 10.0)),
+                                          onChanged: (value) => {
+                                                service.filterProducts(value),
+                                                debugPrint(
+                                                    'SearchBar onChanged: $value'),
+                                              },
+                                          onSubmitted: (value) => {
+                                                service.filterProducts(value),
+                                                debugPrint(
+                                                    'SearchBar onSubmitted: $value'),
+                                              },
+                                          leading: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            child: const Icon(Icons.search),
+                                          ),
+                                          trailing: [
+                                            IconButton(
+                                              icon: const Icon(Icons.close),
+                                              tooltip: 'Limpiar',
+                                              onPressed: () {
+                                                searchBarController.clear();
+                                                service.filterProducts('');
+                                              },
+                                            ),
+                                          ]),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: service.filteredProducts.length,
+                            itemBuilder: (context, index) {
+                              return ProductListItem(
+                                product: service.filteredProducts[index],
+                                onTapCallback: (product) =>
+                                    widget.onTapCallback(product),
+                              );
+                            },
+                          ),
+                        )
+                      ]),
                     ),
-                  )
-                ]));
+                  ],
+                ));
           },
         ));
   }

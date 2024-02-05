@@ -31,90 +31,94 @@ class _ProductDetailState extends State<ProductDetail> {
       child: Consumer<SelectedProductNotifier>(
         builder: (context, service, child) {
           return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).primaryColor,
-              title: Text(
-                (product == null) ? '' : product!.description,
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                title: Text(
+                  (product == null) ? '' : product!.description,
+                ),
+                automaticallyImplyLeading: false,
+                leading: IconButton(
+                  icon: const Icon(Icons.close),
+                  tooltip: 'Cerrar',
+                  onPressed: () {
+                    widget.closeCallback();
+                  },
+                ),
+                actions: [
+                  // EDIT
+                  IconButton(
+                      icon: const Icon(Icons.edit),
+                      tooltip: 'Editar Producto',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductEdit(product: product!)),
+                        ).then((value) => {
+                              context
+                                  .read<SelectedProductNotifier>()
+                                  .selectedProduct = value,
+                            });
+                      }),
+                  // DELETE
+                  IconButton(
+                      icon: const Icon(Icons.delete),
+                      tooltip: 'Eliminar Producto',
+                      onPressed: () {
+                        // delete confirm dialog
+                        if (product != null && product!.id != null) {
+                          deleteConfirm(
+                              context,
+                              product!,
+                              context.read<ProductsService>(),
+                              widget.closeCallback);
+                        }
+                      }),
+                ],
               ),
-              automaticallyImplyLeading: false,
-              leading: IconButton(
-                icon: const Icon(Icons.close),
-                tooltip: 'Cerrar',
-                onPressed: () {
-                  widget.closeCallback();
-                },
-              ),
-              actions: [
-                // EDIT
-                IconButton(
-                    icon: const Icon(Icons.edit),
-                    tooltip: 'Editar Producto',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ProductEdit(product: product!)),
-                      ).then((value) => {
-                            context
-                                .read<SelectedProductNotifier>()
-                                .selectedProduct = value,
-                          });
-                    }),
-                // DELETE
-                IconButton(
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Eliminar Producto',
-                    onPressed: () {
-                      // delete confirm dialog
-                      if (product != null && product!.id != null) {
-                        deleteConfirm(
-                            context,
-                            product!,
-                            context.read<ProductsService>(),
-                            widget.closeCallback);
-                      }
-                    }),
-              ],
-            ),
-            body: (product == null)
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    padding: const EdgeInsets.all(30),
-                    child: ConstrainedBox(
-                      constraints:
-                          const BoxConstraints(minWidth: double.infinity),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ImageLoader(product: product!, size: 300),
-                          const SizedBox(height: 20),
-                          Text(
-                            product!.description,
-                            style: const TextStyle(fontSize: 20),
+              body: Container(
+                height: double.infinity,
+                color: Colors.blueGrey[50],
+                child: (product == null)
+                    ? const Center(child: CircularProgressIndicator())
+                    : SingleChildScrollView(
+                        padding: const EdgeInsets.all(30),
+                        child: ConstrainedBox(
+                          constraints:
+                              const BoxConstraints(minWidth: double.infinity),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ImageLoader(product: product!, size: 300),
+                              const SizedBox(height: 20),
+                              Text(
+                                product!.description,
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                NumberFormat.simpleCurrency(locale: 'es')
+                                    .format(product!.price),
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                DateFormat('dd/MM/yyyy')
+                                    .format(product!.available),
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'Rating: ${product!.rating}',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 20),
-                          Text(
-                            NumberFormat.simpleCurrency(locale: 'es')
-                                .format(product!.price),
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            DateFormat('dd/MM/yyyy').format(product!.available),
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Rating: ${product!.rating}',
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-          );
+              ));
         },
       ),
     );

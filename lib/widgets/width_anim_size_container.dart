@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 /// Contenedor expandible horizontalmente con animación
-///
-///
 class WidthAnimSizeContainer extends StatefulWidget {
   const WidthAnimSizeContainer({
     super.key,

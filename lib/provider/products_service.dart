@@ -8,6 +8,7 @@ import '../models/product.dart';
 class ProductsService extends ChangeNotifier {
   static const int timeout = 3;
   List<Product> products = [];
+  List<Product> filteredProducts = [];
   String lastError = '';
   bool _loading = false;
 
@@ -26,6 +27,7 @@ class ProductsService extends ChangeNotifier {
   updateProducts() {
     getProducts().then((value) {
       products = value;
+      filteredProducts = value;
       notifyListeners();
     });
   }
@@ -197,5 +199,13 @@ class ProductsService extends ChangeNotifier {
 
   void setError(String error) {
     lastError = error;
+  }
+
+  filterProducts(String value) {
+    filteredProducts = products
+        .where((element) =>
+            element.description.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+    notifyListeners();
   }
 }
