@@ -3,11 +3,6 @@
 ## Puesta en marcha
 
 Clonar el repositorio
-
-```bash
-git clone https://github.com/jsanvil/flutter_products.git
-```
-
 Entrar en el directorio del proyecto y descargar las dependencias
 
 ```bash
