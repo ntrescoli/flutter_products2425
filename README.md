@@ -1,12 +1,5 @@
 # Proyecto de ejemplo `flutter_products`
 
-## Descripción
-
-Módulo: Desarrollo de aplicaciones multiplataforma
-Curso: 2023/24
-
-En estre proyecto se muestra un ejemplo de aplicación desarrollada con _Flutter_ partiendo de los contenidos vistos en la asignatura. ([contenidos en formato web](https://jsanvil.github.io/din2023/ud5/ud5_2_flutter_intro/)).
-
 ## Puesta en marcha
 
 Clonar el repositorio
