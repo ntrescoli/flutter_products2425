@@ -7,6 +7,7 @@ Entrar en el directorio del proyecto y descargar las dependencias
 
 ```bash
 cd flutter_products
+flutter pub upgrade
 flutter pub get
 ```
 
